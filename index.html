@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; media-src file:; img-src file:">
+  <title>Music player</title>
+  <link rel="icon" href="./images/app-icon-padded.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main>
+    <nav class="page-nav" aria-label="Pages">
+      <button id="library-nav" class="active" type="button">Library</button>
+      <button id="taste-nav" type="button">Taste</button>
+      <button id="loved-nav" type="button">Loved</button>
+      <button id="played-nav" type="button">Played</button>
+      <button id="settings-nav" class="settings-nav" type="button" aria-label="Settings" title="Settings">⚙︎</button>
+    </nav>
+
+    <div id="library-page">
+      <section class="search">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="search-input" type="search" aria-label="Search albums" placeholder="Start somewhere — search an album to drop the needle.">
+        <ul id="search-results"></ul>
+      </section>
+
+      <p id="recommendation-reason">Finding a place to start.</p>
+
+      <section class="album">
+        <img id="album-cover" src="./images/placeholder.svg" alt="Album cover">
+
+        <div class="album-copy">
+          <p id="album-artist">Artist</p>
+          <h1 id="album-name">Choose an album</h1>
+          <p id="album-runtime">Album plays start to finish.</p>
+          <ol id="song-list"></ol>
+
+          <div class="controls">
+            <button id="play-button" type="button">▶ Play album</button>
+            <button id="like-button" type="button">👍 More like this</button>
+            <button id="dislike-button" type="button">✕ Less like this</button>
+            <button id="love-button" type="button">♡ Love</button>
+          </div>
+
+          <p id="momentum"></p>
+        </div>
+      </section>
+    </div>
+
+    <section id="taste-page" class="taste-page" hidden>
+      <h1>Your taste</h1>
+      <div class="taste-summary">
+        <span>👍 <strong id="liked-count">0</strong> liked</span>
+        <span>👎 <strong id="disliked-count">0</strong> disliked</span>
+        <button id="reset-taste" type="button">Reset</button>
+      </div>
+      <h2>Recommendation candidates</h2>
+      <ol id="taste-candidates"></ol>
+    </section>
+
+    <section id="loved-page" class="loved-page" hidden>
+      <h1>Loved albums</h1>
+      <div id="loved-albums"></div>
+    </section>
+
+    <section id="played-page" class="played-page" hidden>
+      <h1>Played albums</h1>
+      <div id="played-albums"></div>
+    </section>
+
+    <section id="settings-page" class="settings-page" hidden>
+      <h1>Settings</h1>
+      <form id="settings-form">
+        <label for="beets-library">Beets library database</label>
+        <input id="beets-library" type="text" placeholder="/path/to/library.db">
+
+        <label for="music-library">Music library folder</label>
+        <input id="music-library" type="text" placeholder="/path/to/music">
+
+        <div class="settings-actions">
+          <button type="submit">Save settings</button>
+          <span id="settings-status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+
+    <footer class="player-bar">
+      <div class="player-inner">
+        <p id="now-playing">Nothing playing</p>
+        <audio id="player" controls></audio>
+      </div>
+    </footer>
+  </main>
+
+  <script src="./dist/renderer.js"></script>
+</body>
+</html>

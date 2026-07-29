@@ -1,0 +1,22 @@
+{
+  "name": "galileo-app",
+  "version": "1.0.0",
+  "description": "Galileo",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && electron .",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jane Doe",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^43.2.0",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "lib-galileo": "file:../lib-galileo",
+    "yaml": "^2.9.0"
+  }
+}
