@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Use HTTPS for the public lib-galileo dependency
+        run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+
+      - name: Cache dependencies and models
+        id: dependencies-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ runner.arch }}-node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.dependencies-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Package application
+        run: npm run make
+
+      - name: Add DMG to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          dmg="$(find out/make -type f -name '*.dmg' -print -quit)"
+          test -n "$dmg"
+
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$dmg" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$dmg" \
+              --verify-tag \
+              --generate-notes \
+              --title "$GITHUB_REF_NAME"
+          fi
