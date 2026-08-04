@@ -336,6 +336,12 @@ button:disabled {
   color: var(--muted);
 }
 
+.app-version {
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 #played-albums {
   display: grid;
   gap: 8px;

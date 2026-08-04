@@ -29,6 +29,7 @@ const settingsForm = document.getElementById('settings-form') as HTMLFormElement
 const beetsLibrary = document.getElementById('beets-library') as HTMLInputElement
 const musicLibrary = document.getElementById('music-library') as HTMLInputElement
 const settingsStatus = document.getElementById('settings-status') as HTMLElement
+const appVersion = document.getElementById('app-version') as HTMLElement
 const tasteCandidates = document.getElementById('taste-candidates') as HTMLOListElement
 const likedCount = document.getElementById('liked-count') as HTMLElement
 const dislikedCount = document.getElementById('disliked-count') as HTMLElement
@@ -173,9 +174,13 @@ async function updatePlayedPage() {
 }
 
 async function updateSettingsPage() {
-  const settings = await window.galileo.getSettings()
+  const [settings, version] = await Promise.all([
+    window.galileo.getSettings(),
+    window.galileo.getAppVersion()
+  ])
   beetsLibrary.value = settings.beetsLibrary
   musicLibrary.value = settings.musicLibrary
+  appVersion.innerText = version
   settingsStatus.innerText = ''
 }
 

@@ -32,6 +32,7 @@ interface SettingsView {
 
 interface Window {
   galileo: {
+    getAppVersion: () => Promise<string>
     getSettings: () => Promise<SettingsView>
     saveSettings: (settings: SettingsView) => Promise<void>
     randomAlbum: () => Promise<AlbumView>

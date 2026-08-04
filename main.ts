@@ -56,6 +56,7 @@ void app.whenReady().then(async () => {
 
   if (process.platform === 'darwin') app.dock?.setIcon(icon)
 
+  ipcMain.handle('get-app-version', () => app.getVersion())
   ipcMain.handle('get-settings', () => settings)
   ipcMain.handle(
     'save-settings',

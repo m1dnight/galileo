@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 contextBridge.exposeInMainWorld('galileo', {
+  getAppVersion: (): Promise<string> => ipcRenderer.invoke('get-app-version'),
   getSettings: (): Promise<SettingsView> => ipcRenderer.invoke('get-settings'),
   saveSettings: (settings: SettingsView): Promise<void> =>
     ipcRenderer.invoke('save-settings', settings),
