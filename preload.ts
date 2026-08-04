@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld('galileo', {
     ipcRenderer.invoke('unlove-album', beetsId),
   recordPlay: (beetsId: number): Promise<void> =>
     ipcRenderer.invoke('record-play', beetsId),
+  skipAlbum: (beetsId: number): Promise<void> =>
+    ipcRenderer.invoke('skip-album', beetsId),
   lovedAlbums: (): Promise<LovedAlbumView[]> =>
     ipcRenderer.invoke('loved-albums'),
   playedAlbums: (): Promise<PlayedAlbumView[]> =>

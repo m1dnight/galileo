@@ -9,7 +9,12 @@ import {
 } from 'lib-galileo'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { appState, rateAlbum } from './app-state'
+import {
+  appState,
+  markAlbumPlayed,
+  markAlbumSkipped,
+  rateAlbum
+} from './app-state'
 import { loadSettings, saveSettings } from './settings'
 import {
   getAlbum,
@@ -66,7 +71,9 @@ void app.whenReady().then(async () => {
       : await getRecommendedAlbum(
           database,
           appState.likedBeetsIds,
-          appState.dislikedBeetsIds
+          appState.dislikedBeetsIds,
+          appState.playedBeetsIds,
+          appState.skippedBeetsIds
         )
 
     return currentAlbumView(database, settings.musicLibrary)
@@ -81,8 +88,12 @@ void app.whenReady().then(async () => {
   ipcMain.handle('unlove-album', (_event, beetsId: number) =>
     unlove(database, beetsId)
   )
-  ipcMain.handle('record-play', (_event, beetsId: number) =>
-    recordPlay(database, beetsId)
+  ipcMain.handle('record-play', async (_event, beetsId: number) => {
+    await recordPlay(database, beetsId)
+    markAlbumPlayed(beetsId)
+  })
+  ipcMain.handle('skip-album', (_event, beetsId: number) =>
+    markAlbumSkipped(beetsId)
   )
   ipcMain.handle('loved-albums', async () => {
     const albums = await listLovedAlbums(database)
@@ -114,14 +125,16 @@ void app.whenReady().then(async () => {
           database,
           appState.likedBeetsIds,
           appState.dislikedBeetsIds,
-          5
+          appState.playedBeetsIds,
+          appState.skippedBeetsIds,
+          20
         )
 
     return {
       likedCount: appState.likedBeetsIds.length,
       dislikedCount: appState.dislikedBeetsIds.length,
       candidates: candidates.map(
-        ({ album }) => `${album.artist} — ${album.title}`
+        ({ album, similarity }) => `${album.artist} — ${album.title} (${similarity})`
       )
     }
   })

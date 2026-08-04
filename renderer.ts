@@ -337,7 +337,10 @@ async function handOff(liked: boolean) {
   loveButton.disabled = true
 
   const previous = selectedAlbum
-  await window.galileo.rateAlbum(previous.beetsId, liked)
+  await Promise.all([
+    window.galileo.rateAlbum(previous.beetsId, liked),
+    window.galileo.skipAlbum(previous.beetsId)
+  ])
 
   const reason = liked
     ? `Because you asked for more like ${previous.title}.`

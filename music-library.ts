@@ -1,5 +1,6 @@
 import {
   artistNovelty,
+  artistRarity,
   composePickers,
   genreNovelty,
   listAlbumsByBeetsIds,
@@ -60,12 +61,16 @@ export async function getTopGenre(
 export async function getRecommendedAlbum(
   database: SidecarDatabase,
   liked: number[],
-  disliked: number[]
+  disliked: number[],
+  played: number[],
+  skipped: number[]
 ) {
   const [recommendation] = await getRecommendationCandidates(
     database,
     liked,
     disliked,
+    played,
+    skipped,
     1
   )
   const songs = await listSongsForAlbum(
@@ -83,13 +88,21 @@ export function getRecommendationCandidates(
   database: SidecarDatabase,
   liked: number[],
   disliked: number[],
+  played: number[],
+  skipped: number[],
   limit: number
 ) {
   return recommendAlbums(database, 'clap', {
     liked,
     disliked,
+    played,
+    skipped,
     scorer: nearestDislikeScorer,
-    picker: composePickers(artistNovelty(0.05), genreNovelty(0.1)),
+    picker: composePickers(
+      artistNovelty(0.1),
+      artistRarity(0.1),
+      genreNovelty(0.1)
+    ),
     limit
   })
 }

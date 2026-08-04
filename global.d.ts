@@ -39,6 +39,7 @@ interface Window {
     loveAlbum: (beetsId: number) => Promise<void>
     unloveAlbum: (beetsId: number) => Promise<void>
     recordPlay: (beetsId: number) => Promise<void>
+    skipAlbum: (beetsId: number) => Promise<void>
     lovedAlbums: () => Promise<LovedAlbumView[]>
     playedAlbums: () => Promise<PlayedAlbumView[]>
     taste: () => Promise<TasteView>
